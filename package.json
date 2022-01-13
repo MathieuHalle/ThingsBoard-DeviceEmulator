@@ -5,14 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx nodemon index.js",
-    "dev2": "./node_modules/.bin/nodejs-dashboard -- node -r ./node_modules/.bin/nodejs-dashboard index.js"
+    "dev": "npx nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "mqtt": "^4.2.1",
-    "nodejs-dashboard": "^0.5.1"
+    "mqtt": "^4.2.1"
   }
 }

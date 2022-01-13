@@ -238,8 +238,7 @@ class Device {
 
   postDeviceRPCResponse = function (id, attrs) {
     console.log(
-      "[MQTT] postDeviceRPCResponse >> v1/devices/me/rpc/response/" + id,
-      attrs
+      "[MQTT] postDeviceRPCResponse >> v1/devices/me/rpc/response/" + id
     );
     this.publishToMQTT("v1/devices/me/rpc/response/" + id, attrs);
   };
