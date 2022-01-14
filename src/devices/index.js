@@ -160,6 +160,8 @@ class Device {
     // Send the client attributes to ThingsBoard and request the attributes from the server
     this.postClientDeviceAttributes();
     this.getDeviceAttributes({});
+
+    this.postDeviceTelemetries();
   };
 
   onMQTTMessage = function (topic, message) {
