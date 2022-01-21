@@ -5,14 +5,23 @@
 
 const Device = require("./src/devices");
 
+// const mqttConfig = {
+//   host: "mqtt://mqtt.thingsboard.cloud", // <-- Change the MQTT Host - api.dynamik.cc
+//   config: {
+//     username: "5Fbn87196NIOweGJiTTQ", // <-- Add a valide devide token - TQwsIvjbHKf9xJnKmo3h
+//   },
+// };
+
+const mqttConfig = {
+  host: "mqtt://10.0.0.251", // <-- Change the MQTT Host - api.dynamik.cc
+  config: {
+    username: "5Fbn87196NIOweGJiTTQ", // <-- Add a valide devide token - TQwsIvjbHKf9xJnKmo3h
+  },
+};
+
 // Generate a new device
 const rpi = new Device({
-  mqtt: {
-    host: "mqtt://mqtt.thingsboard.cloud", // <-- Change the MQTT Host - api.dynamik.cc
-    config: {
-      username: "5Fbn87196NIOweGJiTTQ", // <-- Add a valide devide token - TQwsIvjbHKf9xJnKmo3h
-    },
-  },
+  mqtt: mqttConfig,
   attributes: {
     client: [
       {
@@ -197,15 +206,20 @@ const rpi = new Device({
       },
     },
     {
-      name: "getGpioStatus",
+      name: "setHigh",
       action: function (requestId, attr, device) {
+        console.log(attr.params);
+        device.postDeviceTelemetry("vBat", attr.params.vBat);
         // Prepare the response payload to send back to ThingsBoard
-        let response = {};
-        for (let i = 1; i <= numberOfPin; i++) {
-          response[i] = device.attributes.client[i];
-        }
+        let response = true;
         // Have the device send the response payload
-        device.postDeviceRPCResponse(requestId, response);
+        if (attr.params.vBat == 9.9) {
+          device.postDeviceRPCResponse(requestId, response).then((err) => {
+            device.client.end(true, {}, function () {
+              console.log("WE ARE DONE MOFO");
+            });
+          });
+        }
       },
     },
   ],
