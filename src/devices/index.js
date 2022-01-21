@@ -223,10 +223,7 @@ class Device {
   };
 
   postClientDeviceAttributes = function (attrs) {
-    return this.publishToMQTT(
-      "v1/devices/me/attributes",
-      this.attributes.client
-    );
+    this.publishToMQTT("v1/devices/me/attributes", this.attributes.client);
   };
 
   postDeviceRPC = function (attrs) {
@@ -235,7 +232,7 @@ class Device {
       "[MQTT] postDeviceRPC >> v1/devices/me/rpc/request/" +
         this.postDeviceRPCRequestID
     );
-    return this.publishToMQTT(
+    this.publishToMQTT(
       "v1/devices/me/rpc/request/" + this.postDeviceRPCRequestID,
       attrs
     );
@@ -245,12 +242,12 @@ class Device {
     console.log(
       "[MQTT] postDeviceRPCResponse >> v1/devices/me/rpc/response/" + id
     );
-    return this.publishToMQTT("v1/devices/me/rpc/response/" + id, attrs);
+    this.publishToMQTT("v1/devices/me/rpc/response/" + id, attrs);
   };
 
   getDeviceAttributes = function (attrs) {
     this.getDeviceAttributesRequestID++;
-    return this.publishToMQTT(
+    this.publishToMQTT(
       "v1/devices/me/attributes/request/" + this.getDeviceAttributesRequestID,
       attrs
     );
@@ -266,8 +263,8 @@ class Device {
       values: {},
     };
     payload.values[key] = value;
-    console.log("postDeviceTelemetry >>", payload);
-    return this.publishToMQTT("v1/devices/me/telemetry", payload);
+    // console.log("postDeviceTelemetry >>", payload);
+    this.publishToMQTT("v1/devices/me/telemetry", payload);
   };
 
   // Post all telemeries of the device
@@ -283,23 +280,12 @@ class Device {
         payload.values[this.telemetry[i].key] = this.telemetry[i].value;
       }
       // console.log("postDeviceTelemetry >>", payload);
-      return this.publishToMQTT("v1/devices/me/telemetry", payload);
+      this.publishToMQTT("v1/devices/me/telemetry", payload);
     }
-    return;
   };
 
   publishToMQTT = function (topic, payload) {
-    if (!this.client) return;
-
-    return new Promise((resolve, reject) => {
-      this.client.publish(topic, JSON.stringify(payload), {}, (err) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve();
-      });
-    });
+    this.client.publish(topic, JSON.stringify(payload), 1);
   };
 
   findTelemetryByKey = function (key) {
